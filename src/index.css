@@ -506,7 +506,7 @@ a:hover {
   background: var(--gradient-card);
   border: 1px solid var(--border-primary);
   border-radius: var(--border-radius-lg);
-  overflow: hidden;
+  overflow-x: auto;
 }
 
 .data-table-toolbar {
@@ -1114,6 +1114,26 @@ a:hover {
   .recipe-item-stats {
     width: 100%;
     justify-content: space-between;
+  }
+
+  .data-table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .data-table {
+    min-width: 500px;
+  }
+
+  .data-table thead th,
+  .data-table tbody td {
+    padding: var(--space-sm) var(--space-md);
+    font-size: var(--font-size-xs);
+  }
+
+  .status-badge {
+    font-size: 10px;
+    padding: 2px 6px;
   }
 }
 
