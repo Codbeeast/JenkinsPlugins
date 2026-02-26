@@ -94,7 +94,7 @@ export default function Overview() {
 
     const timelineOption = {
         tooltip: { trigger: 'axis' as const, backgroundColor: '#1c2333', borderColor: '#30363d', textStyle: { color: '#e6edf3' } },
-        grid: { left: 50, right: 20, top: 20, bottom: 30 },
+        grid: { left: 50, right: 20, top: 20, bottom: 70 },
         xAxis: {
             type: 'category' as const,
             data: timeline.map(t => t.date),
