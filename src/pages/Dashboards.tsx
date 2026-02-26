@@ -103,19 +103,28 @@ export default function Dashboards() {
 
     const currentTopicDef = TOPICS.find(t => t.id === activeTopic) || TOPICS[0];
 
+    const isMobile = window.innerWidth < 768;
+
     const comparisonOption = {
         tooltip: { trigger: 'axis' as const, backgroundColor: '#1c2333', borderColor: '#30363d', textStyle: { color: '#e6edf3' }, axisPointer: { type: 'shadow' as const } },
-        grid: { left: 200, right: 40, top: 10, bottom: 20 },
-        xAxis: { type: 'value' as const, splitLine: { lineStyle: { color: 'rgba(48,54,61,0.4)' } }, axisLabel: { color: '#6e7681' } },
+        grid: { left: isMobile ? 100 : 200, right: isMobile ? 15 : 40, top: 10, bottom: 20 },
+        xAxis: {
+            type: 'value' as const,
+            splitLine: { lineStyle: { color: 'rgba(48,54,61,0.4)' } },
+            axisLabel: { color: '#6e7681', fontSize: isMobile ? 10 : 12 }
+        },
         yAxis: {
             type: 'category' as const,
-            data: filteredRecipes.map(r => getRecipeDisplayName(r.recipeId)),
-            axisLabel: { color: '#8b949e', fontSize: 11, width: 180, overflow: 'truncate' as const },
+            data: filteredRecipes.map(r => {
+                const name = getRecipeDisplayName(r.recipeId);
+                return isMobile && name.length > 12 ? name.slice(0, 12) + '…' : name;
+            }),
+            axisLabel: { color: '#8b949e', fontSize: isMobile ? 10 : 11, width: isMobile ? 90 : 180, overflow: 'truncate' as const },
             axisTick: { show: false }, axisLine: { show: false }
         },
         series: [
-            { name: 'Success', type: 'bar', stack: 'total', barWidth: 14, itemStyle: { color: '#39d353' }, data: filteredRecipes.map(r => r.successCount) },
-            { name: 'Failed', type: 'bar', stack: 'total', barWidth: 14, itemStyle: { color: '#f85149', borderRadius: [0, 3, 3, 0] }, data: filteredRecipes.map(r => r.failureCount) }
+            { name: 'Success', type: 'bar', stack: 'total', barWidth: isMobile ? 10 : 14, itemStyle: { color: '#39d353' }, data: filteredRecipes.map(r => r.successCount) },
+            { name: 'Failed', type: 'bar', stack: 'total', barWidth: isMobile ? 10 : 14, itemStyle: { color: '#f85149', borderRadius: [0, 3, 3, 0] }, data: filteredRecipes.map(r => r.failureCount) }
         ]
     };
 
@@ -217,7 +226,7 @@ export default function Dashboards() {
             )}
 
             {/* Recipe Selector + Plugin Table */}
-            <div style={{ display: 'grid', gridTemplateColumns: '280px 1fr', gap: 'var(--space-lg)', marginBottom: 'var(--space-xl)' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '280px 1fr', gap: 'var(--space-lg)', marginBottom: 'var(--space-xl)' }}>
                 {/* Recipe Selector */}
                 <div className="chart-card" style={{ maxHeight: 500, overflowY: 'auto' }}>
                     <div className="chart-card-title" style={{ fontSize: 'var(--font-size-sm)' }}>Select Recipe</div>

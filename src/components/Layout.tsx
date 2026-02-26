@@ -1,10 +1,35 @@
-import { NavLink, Outlet } from 'react-router-dom';
+import { useState } from 'react';
+import { NavLink, Outlet, useLocation } from 'react-router-dom';
 
 export default function Layout() {
+    const [sidebarOpen, setSidebarOpen] = useState(false);
+    const location = useLocation();
+
+    // Close sidebar on route change
+    const closeSidebar = () => setSidebarOpen(false);
+
     return (
         <>
             <header className="app-header">
-                <NavLink to="/" className="header-brand">
+                <button
+                    className="hamburger-btn"
+                    onClick={() => setSidebarOpen(!sidebarOpen)}
+                    aria-label="Toggle menu"
+                >
+                    {sidebarOpen ? (
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                            <line x1="18" y1="6" x2="6" y2="18" />
+                            <line x1="6" y1="6" x2="18" y2="18" />
+                        </svg>
+                    ) : (
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                            <line x1="3" y1="6" x2="21" y2="6" />
+                            <line x1="3" y1="12" x2="21" y2="12" />
+                            <line x1="3" y1="18" x2="21" y2="18" />
+                        </svg>
+                    )}
+                </button>
+                <NavLink to="/" className="header-brand" onClick={closeSidebar}>
                     <svg viewBox="0 0 32 32" fill="none">
                         <rect width="32" height="32" rx="8" fill="url(#g1)" />
                         <path d="M8 16L14 10L20 16L14 22Z" fill="white" opacity="0.9" />
@@ -34,12 +59,17 @@ export default function Layout() {
                 </div>
             </header>
 
+            {/* Overlay for mobile */}
+            {sidebarOpen && (
+                <div className="sidebar-overlay" onClick={closeSidebar} />
+            )}
+
             <div className="app-shell">
-                <nav className="app-sidebar">
+                <nav className={`app-sidebar ${sidebarOpen ? 'open' : ''}`}>
                     <div className="sidebar-section-label">Navigation</div>
                     <ul className="sidebar-nav">
                         <li>
-                            <NavLink to="/" end className={({ isActive }) => `sidebar-nav-item ${isActive ? 'active' : ''}`}>
+                            <NavLink to="/" end className={({ isActive }) => `sidebar-nav-item ${isActive ? 'active' : ''}`} onClick={closeSidebar}>
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                                     <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
                                     <polyline points="9 22 9 12 15 12 15 22" />
@@ -48,7 +78,7 @@ export default function Layout() {
                             </NavLink>
                         </li>
                         <li>
-                            <NavLink to="/dashboards" className={({ isActive }) => `sidebar-nav-item ${isActive ? 'active' : ''}`}>
+                            <NavLink to="/dashboards" className={({ isActive }) => `sidebar-nav-item ${isActive ? 'active' : ''}`} onClick={closeSidebar}>
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                                     <rect x="3" y="3" width="7" height="7" />
                                     <rect x="14" y="3" width="7" height="7" />
@@ -59,7 +89,7 @@ export default function Layout() {
                             </NavLink>
                         </li>
                         <li>
-                            <NavLink to="/explorer" className={({ isActive }) => `sidebar-nav-item ${isActive ? 'active' : ''}`}>
+                            <NavLink to="/explorer" className={({ isActive }) => `sidebar-nav-item ${isActive ? 'active' : ''}`} onClick={closeSidebar}>
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                                     <line x1="8" y1="6" x2="21" y2="6" />
                                     <line x1="8" y1="12" x2="21" y2="12" />
@@ -75,7 +105,7 @@ export default function Layout() {
                     <div className="sidebar-section-label">Documentation</div>
                     <ul className="sidebar-nav">
                         <li>
-                            <NavLink to="/methodology" className={({ isActive }) => `sidebar-nav-item ${isActive ? 'active' : ''}`}>
+                            <NavLink to="/methodology" className={({ isActive }) => `sidebar-nav-item ${isActive ? 'active' : ''}`} onClick={closeSidebar}>
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                                     <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
                                     <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
@@ -84,7 +114,7 @@ export default function Layout() {
                             </NavLink>
                         </li>
                         <li>
-                            <NavLink to="/data-dictionary" className={({ isActive }) => `sidebar-nav-item ${isActive ? 'active' : ''}`}>
+                            <NavLink to="/data-dictionary" className={({ isActive }) => `sidebar-nav-item ${isActive ? 'active' : ''}`} onClick={closeSidebar}>
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                                     <polyline points="14 2 14 8 20 8" />
@@ -126,3 +156,4 @@ export default function Layout() {
         </>
     );
 }
+

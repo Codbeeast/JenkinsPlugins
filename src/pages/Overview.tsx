@@ -63,29 +63,38 @@ export default function Overview() {
         }]
     };
 
+    const isMobile = window.innerWidth < 768;
+
     const recipeBarOption = {
         tooltip: {
             trigger: 'axis' as const,
             backgroundColor: '#1c2333', borderColor: '#30363d', textStyle: { color: '#e6edf3' },
             axisPointer: { type: 'shadow' as const }
         },
-        grid: { left: 180, right: 30, top: 10, bottom: 20 },
-        xAxis: { type: 'value' as const, splitLine: { lineStyle: { color: 'rgba(48,54,61,0.4)' } }, axisLabel: { color: '#6e7681' } },
+        grid: { left: isMobile ? 100 : 180, right: isMobile ? 15 : 30, top: 10, bottom: 20 },
+        xAxis: {
+            type: 'value' as const,
+            splitLine: { lineStyle: { color: 'rgba(48,54,61,0.4)' } },
+            axisLabel: { color: '#6e7681', fontSize: isMobile ? 10 : 12 }
+        },
         yAxis: {
             type: 'category' as const,
-            data: recipes.slice(0, 10).map(r => getRecipeDisplayName(r.recipeId)),
-            axisLabel: { color: '#8b949e', fontSize: 11 },
+            data: recipes.slice(0, 10).map(r => {
+                const name = getRecipeDisplayName(r.recipeId);
+                return isMobile && name.length > 12 ? name.slice(0, 12) + '…' : name;
+            }),
+            axisLabel: { color: '#8b949e', fontSize: isMobile ? 10 : 11 },
             axisTick: { show: false },
             axisLine: { show: false }
         },
         series: [
             {
-                name: 'Success', type: 'bar', stack: 'total', barWidth: 16,
+                name: 'Success', type: 'bar', stack: 'total', barWidth: isMobile ? 12 : 16,
                 itemStyle: { color: '#39d353', borderRadius: [0, 0, 0, 0] },
                 data: recipes.slice(0, 10).map(r => r.successCount)
             },
             {
-                name: 'Failed', type: 'bar', stack: 'total', barWidth: 16,
+                name: 'Failed', type: 'bar', stack: 'total', barWidth: isMobile ? 12 : 16,
                 itemStyle: { color: '#f85149', borderRadius: [0, 4, 4, 0] },
                 data: recipes.slice(0, 10).map(r => r.failureCount)
             }
@@ -94,17 +103,23 @@ export default function Overview() {
 
     const timelineOption = {
         tooltip: { trigger: 'axis' as const, backgroundColor: '#1c2333', borderColor: '#30363d', textStyle: { color: '#e6edf3' } },
-        grid: { left: 50, right: 20, top: 20, bottom: 70 },
+        grid: { left: isMobile ? 35 : 50, right: isMobile ? 10 : 20, top: 20, bottom: isMobile ? 60 : 70 },
         xAxis: {
             type: 'category' as const,
-            data: timeline.map(t => t.date),
-            axisLabel: { color: '#6e7681', fontSize: 10, rotate: 45 },
+            data: timeline.map(t => {
+                if (isMobile) {
+                    const parts = t.date.split('-');
+                    return parts[1] + '/' + parts[2];
+                }
+                return t.date;
+            }),
+            axisLabel: { color: '#6e7681', fontSize: isMobile ? 9 : 10, rotate: isMobile ? 60 : 45, interval: isMobile ? 'auto' : 0 },
             axisLine: { lineStyle: { color: '#30363d' } }
         },
         yAxis: {
             type: 'value' as const,
             splitLine: { lineStyle: { color: 'rgba(48,54,61,0.4)' } },
-            axisLabel: { color: '#6e7681' }
+            axisLabel: { color: '#6e7681', fontSize: isMobile ? 10 : 12 }
         },
         series: [{
             type: 'bar',
@@ -119,7 +134,7 @@ export default function Overview() {
                 },
                 borderRadius: [3, 3, 0, 0]
             },
-            barMaxWidth: 20,
+            barMaxWidth: isMobile ? 12 : 20,
         }]
     };
 
