@@ -101,19 +101,18 @@ export default function Overview() {
         ]
     };
 
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     const timelineOption = {
         tooltip: { trigger: 'axis' as const, backgroundColor: '#1c2333', borderColor: '#30363d', textStyle: { color: '#e6edf3' } },
-        grid: { left: isMobile ? 35 : 50, right: isMobile ? 10 : 20, top: 20, bottom: isMobile ? 60 : 70 },
+        grid: { left: isMobile ? 35 : 50, right: isMobile ? 10 : 20, top: 20, bottom: isMobile ? 50 : 55 },
         xAxis: {
             type: 'category' as const,
             data: timeline.map(t => {
-                if (isMobile) {
-                    const parts = t.date.split('-');
-                    return parts[1] + '/' + parts[2];
-                }
-                return t.date;
+                const parts = t.date.split('-');
+                const mon = monthNames[parseInt(parts[1], 10) - 1] || parts[1];
+                return `${mon} '${parts[0].slice(2)}`;
             }),
-            axisLabel: { color: '#6e7681', fontSize: isMobile ? 9 : 10, rotate: isMobile ? 60 : 45, interval: isMobile ? 'auto' : 0 },
+            axisLabel: { color: '#6e7681', fontSize: isMobile ? 9 : 11, rotate: 35, interval: 'auto' },
             axisLine: { lineStyle: { color: '#30363d' } }
         },
         yAxis: {
